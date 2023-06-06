@@ -14,7 +14,6 @@ urlpatterns = [
     path('tag/<slug:tag_title>', views.tag_filter, name='tag_filter'),
     path('contacts/', views.contacts, name='contacts'),
     path('', views.index, name='index'),
-    path('sample/', blog_views.sample_view),
 ]
 
 if settings.DEBUG:
