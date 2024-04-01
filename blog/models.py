@@ -3,6 +3,22 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 
+class PostQuerySet(models.QuerySet):
+    def year(self, year):
+        posts_at_year = self.filter(published_at__year=year)
+        return posts_at_year
+
+    def popular(self, count=5):
+        popular_posts = self.annotate(
+            likes_count=models.Count('likes')
+        ).order_by('-likes_count')[:count]
+        return popular_posts
+
+    def fresh(self, count=5):
+        fresh_posts = self.prefetch_related('author').order_by('-published_at')[:count]
+        return fresh_posts
+
+
 class Post(models.Model):
     title = models.CharField('Заголовок', max_length=200)
     text = models.TextField('Текст')
@@ -25,6 +41,8 @@ class Post(models.Model):
         related_name='posts',
         verbose_name='Теги')
 
+    objects = PostQuerySet.as_manager()
+
     def __str__(self):
         return self.title
 
@@ -32,7 +50,7 @@ class Post(models.Model):
         return reverse('post_detail', args={'slug': self.slug})
 
     class Meta:
-        ordering = ['-published_at']
+        ordering = ['published_at']
         verbose_name = 'пост'
         verbose_name_plural = 'посты'
 
