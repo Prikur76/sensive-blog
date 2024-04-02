@@ -8,14 +8,18 @@ class PostQuerySet(models.QuerySet):
         posts_at_year = self.filter(published_at__year=year)
         return posts_at_year
 
-    def popular(self, count=5):
+    def popular(self):
         popular_posts = self.annotate(
             likes_count=models.Count('likes')
-        ).order_by('-likes_count')[:count]
+        ).prefetch_related(
+            'author'
+        ).order_by('-likes_count')
         return popular_posts
 
-    def fresh(self, count=5):
-        fresh_posts = self.prefetch_related('author').order_by('-published_at')[:count]
+    def fresh(self):
+        fresh_posts = self.prefetch_related(
+            'author'
+        ).order_by('-published_at')
         return fresh_posts
 
 
@@ -55,8 +59,27 @@ class Post(models.Model):
         verbose_name_plural = 'посты'
 
 
+class TagQuerySet(models.QuerySet):
+
+    def popular(self):
+        popular_tags = self.annotate(
+            posts_with_tag=models.Count('posts')
+        ).prefetch_related(
+            'posts'
+        ).order_by('-posts_with_tag')
+        return popular_tags
+
+    def posts_count(self):
+        posts_count = self.annotate(
+            posts_count=models.Count('posts')
+        )
+        return posts_count
+
+
 class Tag(models.Model):
     title = models.CharField('Тег', max_length=20, unique=True)
+
+    objects = TagQuerySet.as_manager()
 
     def __str__(self):
         return self.title
