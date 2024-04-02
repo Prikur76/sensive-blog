@@ -581,7 +581,7 @@ a{
 }
 .hero-banner{
     position:relative;
-    background:url(../../img/banner/hero-banner.png) left center no-repeat;
+    background:url(../img/banner/hero-banner.png) left center no-repeat;
     background-size:cover;
     height:400px;
     z-index:1
