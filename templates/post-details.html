@@ -60,18 +60,18 @@
                 {% if post.image_url %}
                 <img class="img-fluid" src="{{ post.image_url }}" alt="">
                 {% endif %}
-                <h4>{{post.title}}</h4>
+                <h4>{{ post.title }}</h4>
                 <div class="user_details">
                   <div class="float-left">
                     {% for tag in post.tags %}
-                      <a href="{% url 'tag_filter' tag.title %}">{{tag.title}}</a>
+                      <a href="{% url 'tag_filter' tag.title %}">{{ tag.title }}</a>
                     {% endfor %}
                   </div>
                   <div class="float-right mt-sm-0 mt-3">
                     <div class="media">
                       <div class="media-body">
-                        <h5>{{post.author}}</h5>
-                        <p>{{post.published_at}}</p>
+                        <h5>{{ post.author }}</h5>
+                        <p>{{ post.published_at }}</p>
                       </div>
                       <div class="d-flex">
                         <img width="42" height="42" src="#" alt="">
@@ -79,10 +79,10 @@
                     </div>
                   </div>
                 </div>
-                <p>{{post.text}}</p>
+                <p>{{ post.text }}</p>
                <div class="news_d_footer flex-column flex-sm-row">
-                 <a href="#"><span class="align-middle mr-2"><i class="ti-heart"></i></span>{{post.likes_amount}} people like this</a>
-                 <a class="justify-content-sm-center ml-sm-auto mt-sm-0 mt-2" href="#"><span class="align-middle mr-2"><i class="ti-themify-favicon"></i></span>{{post.comments|length}} Comments</a>
+                 <a href="#"><span class="align-middle mr-2"><i class="ti-heart"></i></span>{{ post.likes_amount }} people like this</a>
+                 <a class="justify-content-sm-center ml-sm-auto mt-sm-0 mt-2" href="#"><span class="align-middle mr-2"><i class="ti-themify-favicon"></i></span>{{ post.comments|length }} Comments</a>
                  <div class="news_socail ml-sm-auto mt-sm-0 mt-2">
                <a href="#"><i class="fab fa-facebook-f"></i></a>
                <a href="#"><i class="fab fa-twitter"></i></a>
@@ -93,7 +93,7 @@
               </div>
           
                 <div class="comments-area">
-                    <h4>{{post.comments|length}} Comments</h4>
+                    <h4>{{ post.comments|length }} Comments</h4>
                     <div class="comment-list">
                         {% for comment in post.comments %}
                           <div class="single-comment justify-content-between d-flex" style="margin-bottom: 15px;">
@@ -102,10 +102,10 @@
                                       <img src="#" alt="">
                                   </div>
                                   <div class="desc">
-                                      <h5><a href="#">{{comment.author}}</a></h5>
-                                      <p class="date"> {{comment.published_at}} </p>
+                                      <h5><a href="#">{{ comment.author }}</a></h5>
+                                      <p class="date"> {{ comment.published_at }} </p>
                                       <p class="comment">
-                                          {{comment.text}}
+                                          {{ comment.text }}
                                       </p>
                                   </div>
                               </div>
@@ -136,8 +136,8 @@
                     {% for tag in popular_tags %}
                     <li>
                       <a href="{% url 'tag_filter' tag.title %}" class="d-flex justify-content-between">
-                        <p>{{tag.title}}</p>
-                        <p>({{tag.posts_with_tag}})</p>
+                        <p>{{ tag.title }}</p>
+                        <p>({{ tag.posts_with_tag }})</p>
                       </a>
                     </li>
                     {% endfor %}
@@ -152,13 +152,13 @@
                       <div class="thumb">
                         <img class="card-img rounded-0" src="{% url 'post_detail' post.slug %}" alt="">
                         <ul class="thumb-info">
-                          <li><a href="{% url 'post_detail' post.slug %}">{{post.author}}</a></li>
-                          <li><a href="{% url 'post_detail' post.slug %}">{{post.published_at|date:'Y N d'}}</a></li>
+                          <li><a href="{% url 'post_detail' post.slug %}">{{ post.author }}</a></li>
+                          <li><a href="{% url 'post_detail' post.slug %}">{{ post.published_at|date:'Y N d' }}</a></li>
                         </ul>
                       </div>
                       <div class="details ml-1">
                         <a href="{% url 'post_detail' post.slug %}">
-                          <h6>{{post.title}}</h6>
+                          <h6>{{ post.title }}</h6>
                         </a>
                       </div>
                     </div>
