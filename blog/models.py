@@ -22,6 +22,24 @@ class PostQuerySet(models.QuerySet):
         ).order_by('-published_at')
         return fresh_posts
 
+    def fetch_with_comments_count(self):
+        """
+        Добавляет количество комментариев ко всем постам в выборке
+        :return:
+        """
+        posts_ids = [post.id for post in self]
+        post_with_comments_count =  Post.objects.filter(
+            id__in=posts_ids
+        ).annotate(
+            comments_count=models.Count('comments')
+        )
+        ids_and_comments = dict(
+            post_with_comments_count.values_list('id', 'comments_count')
+        )
+        for post in self:
+            post.comments_count = ids_and_comments[post.id]
+        return self
+
 
 class Post(models.Model):
     title = models.CharField('Заголовок', max_length=200)
@@ -29,7 +47,6 @@ class Post(models.Model):
     slug = models.SlugField('Название в виде url', max_length=200)
     image = models.ImageField('Картинка')
     published_at = models.DateTimeField('Дата и время публикации')
-
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -106,7 +123,6 @@ class Comment(models.Model):
         User,
         on_delete=models.CASCADE,
         verbose_name='Автор')
-
     text = models.TextField('Текст комментария')
     published_at = models.DateTimeField('Дата и время публикации')
 
