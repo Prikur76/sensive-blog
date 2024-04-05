@@ -4,41 +4,37 @@ from django.contrib.auth.models import User
 
 
 class PostQuerySet(models.QuerySet):
+
     def year(self, year):
         posts_at_year = self.filter(published_at__year=year)
         return posts_at_year
 
     def popular(self):
-        popular_posts = self.annotate(
+        popular_posts = self.prefetch_related(
+            'tags', 'author__username'
+        ).annotate(
             likes_count=models.Count('likes')
-        ).prefetch_related(
-            'author'
         ).order_by('-likes_count')
         return popular_posts
 
     def fresh(self):
         fresh_posts = self.prefetch_related(
-            'author'
+            'tags', 'author__username'
         ).order_by('-published_at')
         return fresh_posts
 
     def fetch_with_comments_count(self):
         """
-        Добавляет количество комментариев ко всем постам в выборке
-        :return:
+        Возвращает QuerySet с количеством комментариев ко всем постам в выборке
         """
-        posts_ids = [post.id for post in self]
+        posts_ids = self.values_list('id', flat=True)
         post_with_comments_count =  Post.objects.filter(
             id__in=posts_ids
         ).annotate(
-            comments_count=models.Count('comments')
+            comments_count=models.Count('comments'),
+            likes_count=models.Count('likes')
         )
-        ids_and_comments = dict(
-            post_with_comments_count.values_list('id', 'comments_count')
-        )
-        for post in self:
-            post.comments_count = ids_and_comments[post.id]
-        return self
+        return post_with_comments_count
 
 
 class Post(models.Model):
@@ -79,10 +75,10 @@ class Post(models.Model):
 class TagQuerySet(models.QuerySet):
 
     def popular(self):
-        popular_tags = self.annotate(
-            posts_with_tag=models.Count('posts')
-        ).prefetch_related(
+        popular_tags = self.prefetch_related(
             'posts'
+        ).annotate(
+            posts_with_tag=models.Count('posts')
         ).order_by('-posts_with_tag')
         return popular_tags
 
